@@ -6,3 +6,6 @@ Goal: Reconstructing a two dimensional function from a dataset of 300 observatio
 Code: python, numpy, scipy
 
 Authors: Francesco Russo, Michele Cernigliaro
+
+<img src = "function_image.jpg">
+
