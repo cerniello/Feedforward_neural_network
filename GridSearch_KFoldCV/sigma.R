@@ -1,8 +1,8 @@
 fun <-function(x) (exp(2*sigma*x)-1) / (exp(2*sigma*x)+1)
 
-sigma.seq <- c(0.2, 0.4, 0.5, 1,2,5)
+#sigma.seq <- c(0.2, 0.4, 0.5, 1,2,5)
 
-sigma.seq <- c(seq(0.2, 1.2, 0.2), 2, 5)
+sigma.seq <- c(seq(0.2, 1.8, 0.2))
 cols <- viridis::viridis(length(sigma.seq))
 
 sigma <- sigma.seq[1]
