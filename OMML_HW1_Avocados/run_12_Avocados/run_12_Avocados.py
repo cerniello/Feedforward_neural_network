@@ -16,7 +16,7 @@ X = df[['x1', 'x2']].to_numpy()
 y_true = df[['y']].to_numpy().reshape(1,-1)
 
 # splitting in train and test
-RANDOM_SEED = 1869097 # seed (N° matricola)
+RANDOM_SEED = 1869097  # seed (N° matricola) - for reproducebility
 X_train, X_test, y_train, y_test = train_test_split(X, y_true.reshape(-1,1), test_size=0.15,
                                                     random_state=RANDOM_SEED)
 

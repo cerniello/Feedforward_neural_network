@@ -9,6 +9,8 @@ n = 2        # dimensions
 N = 30       # number of neurons
 sigma = 0.8  # spread of the Gaussian function
 rho = 1e-05  # regularization parameter
+#### END_MACROS
+
 
 def fun_RBF(X, omega):
     """
