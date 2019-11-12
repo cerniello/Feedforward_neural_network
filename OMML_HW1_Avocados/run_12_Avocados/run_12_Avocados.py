@@ -88,15 +88,15 @@ if plot_the_function == 1 or save_the_plot == 1:
 	print('Done')
 
 
-if save_the_plot == 1:
-	print("Saving the function in '{}' ... " .format(img_path), end='')
-	plt.savefig(img_path, dpi=600)
-	print('Done')
+	if save_the_plot == 1:
+		print("Saving the function in '{}' ... " .format(img_path), end='')
+		plt.savefig(img_path, dpi=600)
+		print('Done')
 
-if plot_the_function == 1:
-	print('Plotting the function..')
-	plt.show()
+	if plot_the_function == 1:
+		print('Plotting the function..')
+		plt.show()
 
 
-plt.close()
+	plt.close()
 
