@@ -54,42 +54,10 @@ def fun_RBF(X, omega):
     return np.dot(col, v).reshape(1, -1)
 
 
-def loss_RBF(omega, X, y_true):
-    """
-    Implement the regularized training error function of the RBF network
-
-    Parameters:
-    ------
-    omega: 1D numpy array
-        It contains all the parameters in the order:
-            v: Nx1-array: parameters from the hidden to the output layer
-            c: Nxn Matrix: N centroids in the first hidden layer
-    X: Pxn numpy array
-        P observations of n-dimensional points (n=2): (X1, X2)
-    y_true: true values of the function
-
-    Returns:
-    l: The regularized training function E(omega, sigma, rho)
-    ------
-    """
-    y_pred = fun_RBF(X, omega)
-
-    # objective function
-    l = np.sum((y_pred - y_true)**2)/(2 * X.shape[0]) + rho * np.linalg.norm(omega)**2
-    return l
-
-def MSE(y_true, y_pred):
-    """
-    Compute the Mean Squared Error from y_true and y_predicted
-    """
-    # reshape y's in order to do not have errors
-    y_true = y_true.reshape(-1,)
-    y_pred = y_pred.reshape(-1,)
-    return np.mean(np.square(y_true - y_pred))
 
 def fun_grad_RBF(omega, X, y_true):
     """
-    Function which implement the gradient computation for
+    Function which implements the gradient computation for
     the regularized loss function with respect to v and c vector parameters
 
     Parameters:
@@ -147,3 +115,40 @@ def fun_grad_RBF(omega, X, y_true):
     dE_dc = fusion + 2 * rho * c
 
     return np.concatenate((dE_dv.reshape(1, -1), dE_dc.reshape(1, -1)), axis=1).reshape(-1)
+
+
+
+def loss_RBF(omega, X, y_true):
+    """
+    Implement the regularized training error function of the RBF network
+
+    Parameters:
+    ------
+    omega: 1D numpy array
+        It contains all the parameters in the order:
+            v: Nx1-array: parameters from the hidden to the output layer
+            c: Nxn Matrix: N centroids in the first hidden layer
+    X: Pxn numpy array
+        P observations of n-dimensional points (n=2): (X1, X2)
+    y_true: true values of the function
+
+    Returns:
+    l: The regularized training function E(omega, sigma, rho)
+    ------
+    """
+    y_pred = fun_RBF(X, omega)
+
+    # objective function
+    l = np.sum((y_pred - y_true)**2)/(2 * X.shape[0]) + rho * np.linalg.norm(omega)**2
+    return l
+
+def MSE(y_true, y_pred):
+    """
+    Compute the Mean Squared Error from y_true and y_predicted
+    """
+    # reshape y's in order to do not have errors
+    y_true = y_true.reshape(-1,)
+    y_pred = y_pred.reshape(-1,)
+    return np.mean(np.square(y_true - y_pred))
+
+
