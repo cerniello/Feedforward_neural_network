@@ -42,10 +42,10 @@ def fun_RBF(X, omega):
     c_array = np.tile(c.reshape(-1), X.shape[0])
     X_array = np.tile(X, N).reshape(-1)
 
-    # create a tensor representing X - c
+    # create a tensor representing ||X-c||**2 matrix
     mat = ((c_array - X_array).reshape(X.shape[0], N, 2)) ** 2
 
-    # sum (X[0] - c) with (X[1] - c)
+    # sum (X[0] - c) with (X[1] - c) for each observation
     col = mat[:, :, 0] + mat[:, :, 1]
     col = np.exp(-col / (sigma ** 2))
 
@@ -79,6 +79,9 @@ def loss_RBF(omega, X, y_true):
     return l
 
 def MSE(y_true, y_pred):
+    """
+    Compute the Mean Squared Error from y_true and y_predicted
+    """
     # reshape y's in order to do not have errors
     y_true = y_true.reshape(-1,)
     y_pred = y_pred.reshape(-1,)
@@ -108,10 +111,11 @@ def fun_grad_RBF(omega, X, y_true):
     c = omega[N:].reshape(N, n)
 
     #### dE_dv
+    # create a tensor representing X - c
     c_array = np.tile(c.reshape(-1), X.shape[0])
     X_array = np.tile(X, N).reshape(-1)
 
-    # ||X-c||**2 matrix
+    # create a tensor representing ||X-c||**2 matrix
     mat = ((c_array - X_array).reshape(X.shape[0], N, 2)) ** 2
     col = mat[:, :, 0] + mat[:, :, 1]
 
@@ -123,6 +127,9 @@ def fun_grad_RBF(omega, X, y_true):
     dE_dv = dE_dv.reshape(-1, 1)
 
     #### dE_dc
+    # mat1 and mat2 are matrices that correspond
+    # to calcuations performed on the first and second components
+    # of X respectively
     mat1 = (-(c_array - X_array)).reshape(X.shape[0], N, 2)
     mat1 = mat1[:, :, 0]
     mat1 = 2 * (col * v.T * mat1) / (sigma ** 2)
@@ -133,6 +140,7 @@ def fun_grad_RBF(omega, X, y_true):
     mat2 = 2 * (col * v.T * mat2) / (sigma ** 2)
     mat2 = np.dot((fun_RBF(X, omega) - y_true), mat2) / X.shape[0]
 
+    # now merge the results
     fusion = np.append(mat1.T, mat2.T, axis=1)
 
     # dE_dc
