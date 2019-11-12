@@ -95,9 +95,9 @@ def fun_grad_RBF(omega, X, y_true):
     dE_dv = dE_dv.reshape(-1, 1)
 
     #### dE_dc
-    # mat1 and mat2 are matrices that correspond
-    # to calcuations performed on the first and second components
-    # of X respectively
+    # mat1 and mat2 are matrices that correspond to calcuations 
+    # performed on the first and second components of X respectively
+    
     mat1 = (-(c_array - X_array)).reshape(X.shape[0], N, 2)
     mat1 = mat1[:, :, 0]
     mat1 = 2 * (col * v.T * mat1) / (sigma ** 2)

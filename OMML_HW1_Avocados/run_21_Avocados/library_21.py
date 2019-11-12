@@ -115,7 +115,8 @@ def fun_grad_EL_MLP(v, W, b, X_train, y_true):
 
 def loss_EL_MLP(v, W, b, X, y_true):
     """
-    Implement the quadratic convex training error
+    Implement the quadratic convex training error for the MLP
+    (W and b are fixed)
 
     Parameters:
     -------
@@ -148,3 +149,5 @@ def MSE(y_true, y_pred):
     y_true = y_true.reshape(-1,)
     y_pred = y_pred.reshape(-1,)
     return np.mean(np.square(y_true - y_pred))
+
+    

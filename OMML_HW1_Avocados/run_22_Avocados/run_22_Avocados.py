@@ -12,8 +12,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.cm as cm
 
-
-import library_21 as l21   # our library
+import library_22 as l22   # our library
 
 # loading file into pandas dataframe
 file = pd.ExcelFile('dataPoints.xlsx')
@@ -31,68 +30,74 @@ X_train, X_test, y_train, y_test = train_test_split(X, y_true.reshape(-1,1), tes
 # seed: for reproducebility
 np.random.seed(RANDOM_SEED)
 
-# reshaping y's in a proper way for the library_12 functions
+# reshaping y's in a proper way for the library_22 functions
 y_train = y_train.reshape(1,-1)
 y_test = y_test.reshape(1,-1)
 
+
 # hyperparameters are defined in library_21
 # Notice that the hyperparameters used are the same
-# of run_11 and run_12!
-N = l21.N
-n = X.shape[1]
+# used in run_12 (for the RBF)! 
+
+N = l22.N      # default N: 30
+n = X.shape[1] # n = 2
+
+v = np.random.randn(N, 1)
+idx = np.random.choice(range(0, X_train.shape[0]), size = N)
+c = X_train[idx]
 
 H = 10
-min_list = [] # tracking the H results of minimizer
+min_list = []     # tracking the H results of minimizer
 
 print('-----------------')
 print('-------- Team Avocados run.')
-print('-------- Exercise 2.1: Extreme Learning process on MLP --------')
-print('-------- Random Choice of W and b minimizing {} times' .format(H))
+print('-------- Exercise 2.2: Extreme Learning process on RBF --------')
+print('-------- Unsupervised selection of the centers {} times' .format(H))
 
 for h in range(H):
     # print dinamically the progress
     sys.stdout.write("\r{0}>".format("-------- " + ("=" * h)))
     sys.stdout.flush()
 
-    # initialize the parameters
-    W = np.random.randn(N,n)
-    b = np.random.randn(N,1)
-    v = np.random.randn(N)
+    # creating v
+    v = np.random.randn(N, 1)
 
-    #sleep(0.1)
-    res = minimize(l21.loss_EL_MLP, v, jac = l21.fun_grad_EL_MLP, args=(W, b, X_train, y_train), method = "BFGS")
-    min_list.append([res.fun, W, b, h+1])
+    # picking the centers from the X_train observations
+    idx = np.random.choice(range(0, X_train.shape[0]), size=N)
+    c = X_train[idx]
+
+    # minimize and append the result
+    res = minimize(l22.loss_EL_RBF, v, jac=l22.fun_grad_EL_RBF, args=(c, X, y_true))
+    min_list.append([res.fun, c, h+1])
 
 # sorting the results and picking the best one
 min_list.sort(key = lambda x: x[0])
 
-print(' Done, picking W and b of the iteration n. {}' .format(min_list[0][3]))
+print(' Done, picking the centers c of iteration n. {}' .format(min_list[0][2]))
+print('--------')
 
-
-W = min_list[0][1] #np.random.randn(N,n)
-b = min_list[0][2] #np.random.randn(N,1)
+c = min_list[0][1]
 v = np.random.randn(N)
 
 t1 = time()
-res = minimize(l21.loss_EL_MLP, v, jac = l21.fun_grad_EL_MLP, args=(W, b, X_train, y_train), method = "BFGS")
+res = minimize(l22.loss_EL_RBF, v, jac = l22.fun_grad_EL_RBF, args=(c, X_train, y_train), method = "BFGS")
 t1 = time()-t1
 
 # predicting y with the new parameters omega (res.x) after the optimization process
-y_train_pred = l21.fun_EL_MLP(X_train, res.x, W, b)
-y_test_pred = l21.fun_EL_MLP(X_test, res.x, W, b)
+y_train_pred = l22.fun_EL_RBF(X_train, res.x, c)
+y_test_pred = l22.fun_EL_RBF(X_test, res.x, c)
 
-print('Number of neurons N:', l21.N)
-print('sigma value:', l21.sigma)
-print('rho value:', l21.rho)
+print('Number of neurons N:', l22.N)
+print('sigma value:', l22.sigma)
+print('rho value:', l22.rho)
 print('Optimization solver chosen: BFGS')
 print('nfev:', res.nfev)
 print('nit:', res.nit)
 print('njev:', res.njev)
 print('exec time:', round(t1, 5))
-print('training error (MSE):', l21.MSE(y_train, y_train_pred))
-print('test error (MSE):', l21.MSE(y_test, y_test_pred))
-
-
+print('training error (MSE):', l22.MSE(y_train, y_train_pred))
+print('test error (MSE):', l22.MSE(y_test, y_test_pred))
+print(res.fun)
 
 # PLOTTING THE RESULTING FUNCTION 
 plot_the_function = 0      # decide wether to show or not the function
@@ -105,7 +110,7 @@ if plot_the_function == 1 or save_the_plot == 1:
     X_1 = np.linspace(-2,2,300)
     X_2 = np.linspace(-1,1,300)
     X_1, X_2 = np.meshgrid(X_1, X_2)
-    zs = np.array([l21.fun_EL_MLP(np.array([x,y]).reshape(1,2), res.x, W, b) for x,y in zip(np.ravel(X_1), np.ravel(X_2))])
+    zs = np.array([l22.fun_EL_RBF(np.array([x,y]).reshape(1,2), res.x, c) for x,y in zip(np.ravel(X_1), np.ravel(X_2))])
     Z = zs.reshape(X_1.shape)
     fig = plt.figure(figsize=(12,8))
     ax = fig.gca(projection='3d')
