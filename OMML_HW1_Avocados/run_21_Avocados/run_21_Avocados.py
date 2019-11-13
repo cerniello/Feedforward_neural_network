@@ -1,9 +1,8 @@
 import pandas as pd
 import numpy as np
 from scipy.optimize import minimize  # minimizer
-from time import time, sleep
+from time import time
 from sklearn.model_selection import train_test_split  # split in train and test
-from sklearn.metrics import mean_squared_error
 
 import sys # imported only for dynamic displaying (print on terminal)
 
@@ -41,7 +40,8 @@ y_test = y_test.reshape(1,-1)
 N = l21.N
 n = X.shape[1]
 
-H = 10
+
+H = 5000
 min_list = [] # tracking the H results of minimizer
 
 print('-----------------')
@@ -49,9 +49,11 @@ print('-------- Team Avocados run.')
 print('-------- Exercise 2.1: Extreme Learning process on MLP --------')
 print('-------- Random Choice of W and b minimizing {} times' .format(H))
 
+
+"""
 for h in range(H):
     # print dinamically the progress
-    sys.stdout.write("\r{0}>".format("-------- " + ("=" * h)))
+    sys.stdout.write("\r{}Iteration {}/{}" .format("-------- ", h+1, H))
     sys.stdout.flush()
 
     # initialize the parameters
@@ -59,19 +61,39 @@ for h in range(H):
     b = np.random.randn(N,1)
     v = np.random.randn(N)
 
-    #sleep(0.1)
     res = minimize(l21.loss_EL_MLP, v, jac = l21.fun_grad_EL_MLP, args=(W, b, X_train, y_train), method = "BFGS")
-    min_list.append([res.fun, W, b, h+1])
+    
+    mse_res = l21.MSE(y_train, l21.fun_EL_MLP(X_train, res.x, W, b))
+    min_list.append([mse_res, W, b, h+1])
 
+print(' Finished.')
 # sorting the results and picking the best one
 min_list.sort(key = lambda x: x[0])
 
-print(' Done, picking W and b of the iteration n. {}' .format(min_list[0][3]))
-
-
+# picking the best result
 W = min_list[0][1] #np.random.randn(N,n)
 b = min_list[0][2] #np.random.randn(N,1)
 v = np.random.randn(N)
+
+best_iteration = min_list[0][3]
+
+print('-------- Picking W and b of the iteration n. {}' .format(best_iteration))
+"""
+
+
+# it turned out that our best iteration with our seed was 
+# 2790/5000 (2789 since we count from 0)
+best_iteration = 2790
+print('-------- Picking W and b of the iteration n. {}' .format(best_iteration))
+
+
+for h in range(best_iteration):
+
+    # initialize the parameters
+    W = np.random.randn(N,n)
+    b = np.random.randn(N,1)
+    v = np.random.randn(N)
+
 
 t1 = time()
 res = minimize(l21.loss_EL_MLP, v, jac = l21.fun_grad_EL_MLP, args=(W, b, X_train, y_train), method = "BFGS")
@@ -95,8 +117,8 @@ print('test error (MSE):', l21.MSE(y_test, y_test_pred))
 
 
 # PLOTTING THE RESULTING FUNCTION 
-plot_the_function = 0      # decide wether to show or not the function
-save_the_plot = 0          # decide wether to save or not the function
+plot_the_function = 0    # decide wether to show or not the function
+save_the_plot = 0        # decide wether to save or not the function
 img_path = 'plot_21.png'
 
 if plot_the_function == 1 or save_the_plot == 1:

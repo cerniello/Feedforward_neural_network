@@ -127,4 +127,5 @@ def MSE(y_true, y_pred):
     # reshape y's in order to do not have errors
     y_true = y_true.reshape(-1,)
     y_pred = y_pred.reshape(-1,)
-    return np.mean(np.square(y_true - y_pred))
+    return np.mean(np.square(y_true - y_pred)) / 2
+

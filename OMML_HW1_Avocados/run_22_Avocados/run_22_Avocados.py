@@ -42,42 +42,62 @@ y_test = y_test.reshape(1,-1)
 N = l22.N      # default N: 30
 n = X.shape[1] # n = 2
 
-v = np.random.randn(N, 1)
-idx = np.random.choice(range(0, X_train.shape[0]), size = N)
-c = X_train[idx]
-
-H = 10
+H = 5000
 min_list = []     # tracking the H results of minimizer
+
 
 print('-----------------')
 print('-------- Team Avocados run.')
-print('-------- Exercise 2.2: Extreme Learning process on RBF --------')
+print('-------- Exercise 2.2: Two phases method on RBF --------')
 print('-------- Unsupervised selection of the centers {} times' .format(H))
 
+
+"""
 for h in range(H):
     # print dinamically the progress
-    sys.stdout.write("\r{0}>".format("-------- " + ("=" * h)))
+    sys.stdout.write("\r{}Iteration {}/{}" .format("-------- ", h+1, H))
     sys.stdout.flush()
-
-    # creating v
-    v = np.random.randn(N, 1)
 
     # picking the centers from the X_train observations
     idx = np.random.choice(range(0, X_train.shape[0]), size=N)
     c = X_train[idx]
+    v = np.random.randn(N, 1)
+
 
     # minimize and append the result
     res = minimize(l22.loss_EL_RBF, v, jac=l22.fun_grad_EL_RBF, args=(c, X, y_true))
-    min_list.append([res.fun, c, h+1])
+    
+    mse_res = l22.MSE(y_train, l22.fun_EL_RBF(X_train, res.x, c))
+    min_list.append([mse_res, c, h+1])
 
+print(' Finished.')
 # sorting the results and picking the best one
 min_list.sort(key = lambda x: x[0])
 
-print(' Done, picking the centers c of iteration n. {}' .format(min_list[0][2]))
-print('--------')
 
+# picking the best result
 c = min_list[0][1]
 v = np.random.randn(N)
+
+best_iteration = min_list[0][2]
+
+print('-------- Picking the centers c of iteration n. {}' .format(best_iteration))
+
+"""
+
+# it turned out that our best iteration with our seed was 
+# 1330/5000 (1329 since we count from 0)
+best_iteration = 1330
+
+print('-------- Picking the centers c of iteration n. {}' .format(best_iteration))
+
+for h in range(best_iteration):
+
+    # initialize the parameters
+    idx = np.random.choice(range(0, X_train.shape[0]), size=N)
+    c = X_train[idx]
+    v = np.random.randn(N)
+
 
 t1 = time()
 res = minimize(l22.loss_EL_RBF, v, jac = l22.fun_grad_EL_RBF, args=(c, X_train, y_train), method = "BFGS")
@@ -97,7 +117,6 @@ print('njev:', res.njev)
 print('exec time:', round(t1, 5))
 print('training error (MSE):', l22.MSE(y_train, y_train_pred))
 print('test error (MSE):', l22.MSE(y_test, y_test_pred))
-print(res.fun)
 
 # PLOTTING THE RESULTING FUNCTION 
 plot_the_function = 0      # decide wether to show or not the function
