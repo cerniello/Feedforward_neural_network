@@ -238,15 +238,15 @@ def grid_search(X, y, N, K=5):
                     
 
             # ---- DEBUG ----
-            print('N', N)
-            print('rho', rho)
-            print('res.success', res.success)
-            print('k_train', k_train_err)
-            print('k_val_err', k_val_err)
-            print('time_exec', time_exec)
-            print('nfev', nfev)
-            print('nit', nit)
-            print('njev', njev)
+            #print('N', N)
+            #print('rho', rho)
+            #print('res.success', res.success)
+            #print('k_train', k_train_err)
+            #print('k_val_err', k_val_err)
+            #print('time_exec', time_exec)
+            #print('nfev', nfev)
+            #print('nit', nit)
+            #print('njev', njev)
 
             # create a list and append it to res_list
             res_list.append(['Grad', K, N, sigma, rho, res.success, train_error, np.mean(k_train_err),
