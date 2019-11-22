@@ -14,6 +14,10 @@ import matplotlib.cm as cm
 
 import library_22 as l22   # our library
 
+plot_the_function = 0    # decide wether to show or not the function
+save_the_plot = 0        # decide wether to save or not the function
+img_path = 'plot_21.png'
+
 # loading file into pandas dataframe
 file = pd.ExcelFile('dataPoints.xlsx')
 df = file.parse('Foglio1')
