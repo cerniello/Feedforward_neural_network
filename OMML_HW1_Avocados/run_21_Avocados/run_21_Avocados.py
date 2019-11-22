@@ -53,6 +53,7 @@ print('-------- Exercise 2.1: Extreme Learning process on MLP --------')
 print('-------- Random Choice of W and b minimizing {} times' .format(H))
 
 
+# H iterations
 """
 for h in range(H):
     # print dinamically the progress
