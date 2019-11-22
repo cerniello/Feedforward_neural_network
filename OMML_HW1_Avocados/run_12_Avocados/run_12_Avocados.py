@@ -41,7 +41,9 @@ n = X.shape[1]
 
 # initializing omega vector
 #   it "packs" both v and c vector parameters (minimize takes a unique vector)
-omega = np.random.randn(N + N*n)
+v = np.random.normal(0, 10, N)
+c = np.random.uniform(-2, 2, N*n)
+omega = np.concatenate((v, c))
 
 # minimizing the function using training set
 t1 = time()
