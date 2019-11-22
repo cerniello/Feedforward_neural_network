@@ -226,9 +226,9 @@ def non_convex_Grad(omega, X_train, y_true, v):
     omega_gradient = np.concatenate((dE_dW.reshape(N*n,1), dE_db))
     return omega_gradient.reshape(-1)
 
-def MLP_fun(X, omega):
+def fun_MLP(X, omega):
     """
-    It implements the Multi Layer Perceptron network with one hidden layer
+    It implements the Multi Layer Perceptron network with one hidden layer:
     Given the observations X and the vector parameter omega
     it returns the approximations of y
 
@@ -236,49 +236,38 @@ def MLP_fun(X, omega):
     ------
     X: Pxn numpy array
         P observations of n-dimensional points (n=2): (X1, X2)
-    v: Nx1-array: parameters from the hidden to the output layer
-    W: Nxn Matrix: weights from input layer to hidden layer
-    b: Nx1-array: bias from input layer to hidden layer
-    Returns
-    ------
-    y_pred: 1xP array
-        containing P predictions of the MLP function
-    """
-    # creating matrix X1 (X matrix plus array of ones)
-    X1 = np.append(X, -1* np.ones((X.shape[0], 1)), axis=1)
-
-    # extract param vectors from omega
-    v = omega[0:N].reshape(N, 1)
-    W = omega[N:3*N].reshape(N, n)
-    b = omega[3*N:].reshape(N,1)
-    
-    # merge W with b
-    Wb = np.append(W, b, axis=1)
-    
-    return np.dot(v.T, g_fun(np.dot(Wb, np.transpose(X1)), sigma))
-
-def MLP_loss(omega, X, y_true):
-    """
-    Implement the regularized training error function of the MLP network
-
-    Parameters:
-    ------
     omega: 1D numpy array
         It contains all the parameters in the order:
             v: Nx1-array: parameters from the hidden to the output layer
             W: Nxn Matrix: weights from input layer to hidden layer
             b: Nx1-array: bias from input layer to hidden layer
-    X: Pxn numpy array
-       P observations of n-dimensional points (n=2): (X1, X2)
-    y_true: true values of the function
-
-    Returns:
-    l: The regularized training function E(omega, sigma, rho)
+    Returns
     ------
+    y_pred: 1xP array
+        containing P predictions of the MLP function
     """
-    y_pred = MLP_fun(X, omega)
-    l = np.sum((y_pred - y_true)**2)/(2 * X.shape[0]) + rho * np.linalg.norm(omega)**2
-    return l
+    
+    # creating matrix X1 (X matrix plus array of ones)
+    X1 = np.append(X, -1* np.ones((X.shape[0], 1)), axis=1)
+
+    # extract param vectors from omega
+    v = omega[0:N].reshape(1, N)
+    W = omega[N:3*N].reshape(N, n)
+    b = omega[3*N:].reshape(N, 1)
+    
+    # merge W with b
+    Wb = np.append(W, b, axis=1)
+    
+    return np.dot(v, g_fun(np.dot(Wb, np.transpose(X1)), sigma))
+
+def MSE(y_true, y_pred):
+    """
+    Compute the Mean Squared Error from y_true and y_predicted
+    """
+    # reshape y's in order to do not have errors
+    y_true = y_true.reshape(-1,)
+    y_pred = y_pred.reshape(-1,)
+    return np.mean(np.square(y_true - y_pred)) / 2
 
 def stopping_criteria(X_train, y_train, v, W, b, threshold=[1e-8, 1e-3]):  
     """

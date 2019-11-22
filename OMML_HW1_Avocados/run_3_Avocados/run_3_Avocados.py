@@ -45,8 +45,9 @@ W = np.random.randn(N,n)
 b = np.random.randn(N,1)
 v = np.random.randn(N,1)
 
-print('Initializing 2 block-decomposition routine, max number of iterations: {}' .format(max_iter))
+print('\nInitializing 2 block-decomposition routine, max number of iterations: {}' .format(max_iter))
 
+t = time()
 while not l3.stopping_criteria(X_train, y_train, v, W, b) and cnt < max_iter:
     
     res = minimize(l3.convex_loss, v, jac = l3.convex_Grad, args=(X_train, y_train, W, b), method = "BFGS",
@@ -70,6 +71,20 @@ while not l3.stopping_criteria(X_train, y_train, v, W, b) and cnt < max_iter:
     b = b_star.copy()
     cnt = cnt + 1
 
+t = time() - t
 omega_star = np.concatenate((v.reshape(-1,1), W.reshape(N*n,1), b)).reshape(-1)
-print(l3.MLP_loss(omega_star, X_train, y_train))
-print(l3.MLP_loss(omega_star, X_test, y_test))
+y_pred_train = l3.fun_MLP(X_train, omega_star)
+y_pred_test = l3.fun_MLP(X_test, omega_star)
+
+print('-----------------')
+print('-------- Team Avocados run.')
+print('-------- Exercise 3: MLP 2-Block decomposition implementation --------')
+print('-----------------')
+print('Number of neurons N:', l3.N)
+print('sigma value:', l3.sigma)
+print('rho value:', l3.rho)
+print('Optimization solver chosen: BFGS')
+print("Number of 2-block iterations: ", max_iter)
+print('exec time for 2-block loop:', round(t, 5))
+print('training error (MSE):', l3.MSE(y_train, y_pred_train))
+print('test error (MSE):', l3.MSE(y_test, y_pred_test))
