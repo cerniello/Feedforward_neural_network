@@ -7,7 +7,7 @@ n = 2        # dimensions
 # chosen after GridSearch cross-validation (using K-Fold)
 
 N = 30       # number of neurons
-sigma = 0.8  # spread of the Gaussian function
+sigma = 1.8  # spread of the Gaussian function
 rho = 1e-05  # regularization parameter
 #### END_MACROS
 
