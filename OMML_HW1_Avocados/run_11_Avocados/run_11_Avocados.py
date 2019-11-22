@@ -1,3 +1,4 @@
+#import modules
 import pandas as pd
 import numpy as np
 from scipy.optimize import minimize  # minimizer
@@ -12,10 +13,6 @@ import matplotlib.cm as cm
 
 
 import library_11 as l11   # our library
-
-plot_the_function = 0      # decide wether to show or not the function
-save_the_plot = 0          # decide wether to save or not the function
-img_path = 'plot_11.png'
 
 # loading file into pandas dataframe
 file = pd.ExcelFile('dataPoints.xlsx')
@@ -66,8 +63,12 @@ print('njev:', res.njev)
 print('exec time:', round(t1, 5))
 print('training error (MSE):', l11.MSE(y_train, y_train_pred))
 print('test error (MSE):', l11.MSE(y_test, y_test_pred))
+print('Norm of gradient:', np.linalg.norm(res.jac))
 
 # PLOTTING THE RESULTING FUNCTION 
+plot_the_function = 0      # decide wether to show or not the function
+save_the_plot = 0          # decide wether to save or not the function
+img_path = 'plot_11.png'
 
 if plot_the_function == 1 or save_the_plot == 1:
 	print('-----------------')
