@@ -77,6 +77,15 @@ def loss(omega, X, y_true, N, sigma, rho):
     l = np.sum((y_pred - y_true)**2)/(2 * X.shape[0]) + rho * np.linalg.norm(omega)**2
     return l
 
+def MSE(y_true, y_pred):
+    """
+    Compute the Mean Squared Error from y_true and y_predicted
+    """
+    # reshape y's in order to do not have errors
+    y_true = y_true.reshape(-1,)
+    y_pred = y_pred.reshape(-1,)
+    return np.mean(np.square(y_true - y_pred)) / 2
+
 
 X = df[['x1', 'x2']].to_numpy()
 
@@ -134,7 +143,10 @@ def grid_search(X, y, N, K=5):
 
                 # error on the train and validation
                 k_train_err.append(loss(res.x, X_train, y_train, N, sigma, rho))
-                k_val_err.append(loss(res.x, X_val, y_val, N, sigma, rho))
+
+                # on the validation we use MSE
+                y_pred = fun_RBF(X_val, res.x, N, sigma)
+                k_val_err.append(MSE(y_val, y_pred))
 
                 # store results
                 nfev.append(res.nfev)
