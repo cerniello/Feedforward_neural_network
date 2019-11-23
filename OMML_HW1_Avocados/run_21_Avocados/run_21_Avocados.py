@@ -117,6 +117,7 @@ print('njev:', res.njev)
 print('exec time:', round(t1, 5))
 print('training error (MSE):', l21.MSE(y_train, y_train_pred))
 print('test error (MSE):', l21.MSE(y_test, y_test_pred))
+print('Norm of gradient:', np.linalg.norm(res.jac))
 
 
 

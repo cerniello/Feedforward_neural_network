@@ -90,7 +90,7 @@ print('-------- Picking the centers c of iteration n. {}' .format(best_iteration
 """
 
 # it turned out that our best iteration with our seed was 
-# 1330/5000 (1329 since we count from 0)
+# 1330/5000 
 best_iteration = 1330
 
 print('-------- Picking the centers c of iteration n. {}' .format(best_iteration))
@@ -121,6 +121,8 @@ print('njev:', res.njev)
 print('exec time:', round(t1, 5))
 print('training error (MSE):', l22.MSE(y_train, y_train_pred))
 print('test error (MSE):', l22.MSE(y_test, y_test_pred))
+print('Norm of gradient:', np.linalg.norm(res.jac))
+
 
 # PLOTTING THE RESULTING FUNCTION 
 plot_the_function = 0      # decide wether to show or not the function

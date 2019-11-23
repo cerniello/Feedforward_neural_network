@@ -11,8 +11,12 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.cm as cm
 
-
 import library_3 as l3   # our library
+
+plot_the_function = 0      # decide wether to show or not the function
+save_the_plot = 0          # decide wether to save or not the function
+img_path = 'plot_3.png'
+
 
 # loading file into pandas dataframe
 file = pd.ExcelFile('dataPoints.xlsx')
@@ -88,3 +92,38 @@ print("Number of 2-block iterations: ", max_iter)
 print('exec time for 2-block loop:', round(t, 5))
 print('training error (MSE):', l3.MSE(y_train, y_pred_train))
 print('test error (MSE):', l3.MSE(y_test, y_pred_test))
+print('Norm of gradient:', np.linalg.norm(res.jac))
+
+
+# PLOTTING THE RESULTING FUNCTION 
+
+if plot_the_function == 1 or save_the_plot == 1:
+    print('-----------------')
+    print('Preparing now the plot of the function...')
+    X_1 = np.linspace(-2,2,300)
+    X_2 = np.linspace(-1,1,300)
+    X_1, X_2 = np.meshgrid(X_1, X_2)
+    zs = np.array([l3.fun_MLP(np.array([x,y]).reshape(1,2), omega_star) for x,y in zip(np.ravel(X_1), np.ravel(X_2))])
+    Z = zs.reshape(X_1.shape)
+    fig = plt.figure(figsize=(12,8))
+    ax = fig.gca(projection='3d')
+    ax.plot_surface(X_1, X_2, Z ,linewidth=0,cmap=cm.viridis, antialiased=False)
+    ax.set_xticks((np.linspace(-2,2,10)))
+    ax.view_init(elev=15, azim=240)
+    ax.set_xlabel('X_1')
+    ax.set_ylabel('X_2')
+    ax.set_zlabel('Z Label')
+    print('Done')
+
+
+    if save_the_plot == 1:
+        print("Saving the function in '{}' ... " .format(img_path), end='')
+        plt.savefig(img_path, dpi=600)
+        print('Done')
+
+    if plot_the_function == 1:
+        print('Plotting the function..')
+        plt.show()
+
+
+    plt.close()
