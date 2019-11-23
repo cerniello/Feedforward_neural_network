@@ -41,8 +41,13 @@ n = X.shape[1]
 
 # initializing omega vector
 #   it "packs" both v and c vector parameters (minimize takes a unique vector)
-v = np.random.normal(0, 10, N)
-c = np.random.uniform(-2, 2, N*n)
+v = np.random.normal(0, 1, N)
+
+c1 = np.random.uniform(-2, 2, N).reshape(-1, 1) # initializing the component 1 of c
+c2 = np.random.uniform(-1, 1, N).reshape(-1, 1) # initializing the component 2 of c
+
+c = np.append(c1,c2, axis=1).reshape(-1) # flattening 
+
 omega = np.concatenate((v, c))
 
 # minimizing the function using training set
@@ -68,6 +73,7 @@ print('njev:', res.njev)
 print('exec time:', round(t1, 5))
 print('training error (MSE):', l12.MSE(y_train, y_train_pred))
 print('test error (MSE):', l12.MSE(y_test, y_test_pred))
+print('Norm of gradient:', np.linalg.norm(res.jac))
 
 
 # PLOTTING THE RESULTING FUNCTION 
