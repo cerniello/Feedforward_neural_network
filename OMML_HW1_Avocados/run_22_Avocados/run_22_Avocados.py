@@ -15,8 +15,8 @@ import matplotlib.cm as cm
 import library_22 as l22   # our library
 
 plot_the_function = 0    # decide wether to show or not the function
-save_the_plot = 0        # decide wether to save or not the function
-img_path = 'plot_21.png'
+save_the_plot = 1        # decide wether to save or not the function
+img_path = 'plot_22.png'
 
 # loading file into pandas dataframe
 file = pd.ExcelFile('dataPoints.xlsx')
@@ -125,9 +125,6 @@ print('Norm of gradient:', np.linalg.norm(res.jac))
 
 
 # PLOTTING THE RESULTING FUNCTION 
-plot_the_function = 0      # decide wether to show or not the function
-save_the_plot = 0          # decide wether to save or not the function
-img_path = 'plot_21.png'
 
 if plot_the_function == 1 or save_the_plot == 1:
     print('-----------------')
